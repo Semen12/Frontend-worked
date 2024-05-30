@@ -21,7 +21,7 @@ const status = ref('');
 
 const sendResetLink = async () => {
   try {
-    const response = await axios.post( '/password/forgot', { email: email.value });
+    const response = await axios.post( '/password-forgot', { email: email.value });
     status.value = response.data.status;
   } catch (error) {
     console.error('Ошибка при отправке ссылки на восстановление пароля:', error);

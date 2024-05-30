@@ -17,7 +17,6 @@
           id="email"
           v-model="email"
           class="register__input"
-          @input="inputEmail"
           required
         />
         <div v-if="emailError" class="register__error">
@@ -156,12 +155,7 @@ const isFormInvalid = computed(() => {
   )
 })
 
-const inputEmail = () => {
-  emailError.value = ''
-}
-const inputName = () => {
-  nameError.value = ''
-}
+
 </script>
 
 <style scoped>
