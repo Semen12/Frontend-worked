@@ -11,6 +11,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@eslint/migrate-config": "^1.0.0",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "pinia": "^2.1.7",

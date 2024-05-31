@@ -13,6 +13,7 @@
           id="code"
           v-model="code"
           class="two-factor__input"
+          @input="validateCode"
           required
         />
         <input
@@ -21,14 +22,17 @@
           id="recovery_code"
           v-model="recovery_code"
           class="two-factor__input"
+          @input="validateCode"
           required
         />
         <button type="button" class="two-factor__toggle" @click="toggleRecoveryCodeInput">
           <span v-if="!showRecoveryCodeInput">Использовать код восстановления</span>
           <span v-else>Использовать код аутентификации </span>
         </button>
+        
       </div>
       <div v-if="twofactorError" class="two-factor__error">{{ twofactorError }}</div>
+      <div v-if="twofactorStatus" class="two-factor__status">{{ twofactorStatus }}</div>
       <button type="submit" class="two-factor__button" :disabled="isFormInvalid">
         Подтвердить
       </button>
@@ -47,37 +51,75 @@ const authStore = useAuthStore()
 const router = useRouter()
 const showRecoveryCodeInput = ref(false)
 const twofactorError = ref('')
+const twofactorStatus = ref('')
 
 const verifyCode = async () => {
+  twofactorError.value = ''
+  twofactorStatus.value = ''
+   if(isFormInvalid.value) {
+    event.preventDefault()
+    return
+  } 
   try {
-    await authStore.verifyTwoFactorCode(
+   const response = await authStore.verifyTwoFactorCode(
       !showRecoveryCodeInput.value ? { code: code.value } : { recovery_code: recovery_code.value }
     )
-    await router.push('/')
+    
+    if(response.status === 204) {
+      twofactorStatus.value = 'Ваш код был успешно подтвержден. Вы будете перенаправлены на главную страницу.'
+      setTimeout(async () => {
+        await router.push({ name: 'Home' })
+      },1500)
+    }
   } catch (error) {
-    console.error('Two-factor authentication failed:', error)
+     console.error('Failed to verify two-factor code:', error)
     const errors = error.response.data.errors
-    if (errors.code) {
+    
+   if(errors.code){
       twofactorError.value = errors.code[0]
-    }
-    if (errors.recovery_code) {
-      twofactorError.value = errors.recovery_code[0]
-    }
+   }
+   if(errors.recovery_code){
+     twofactorError.value = errors.recovery_code[0]
+   }
   }
+
 }
+
+
 
 const toggleRecoveryCodeInput = () => {
   showRecoveryCodeInput.value = !showRecoveryCodeInput.value
 }
 
-const isFormInvalid = computed(() => {
+
+ const isFormInvalid = computed(() => {
   if (!showRecoveryCodeInput.value) {
-    return !code.value
+    return code.value.length < 4
   }
   if (showRecoveryCodeInput.value) {
-    return !recovery_code.value
+    return recovery_code.value.length < 4
   }
-})
+  return (!code.value || !recovery_code.value )
+}); 
+
+const validateCode = () => {
+  if (!showRecoveryCodeInput.value) {
+    if (code.value.length < 4) {
+      twofactorError.value = 'Код должен содержать не менее 4 символов в длину'
+      isFormInvalid.value = false
+    } else {
+      twofactorError.value = ''
+    }
+  } else {
+    if (recovery_code.value.length < 6) {
+      twofactorError.value = 'Код востановления должен содержать не менее 4 символов в длину'
+      isFormInvalid.value = false
+    } else {
+      twofactorError.value = ''
+    }
+  }
+}
+
 </script>
 
 <style scoped>
@@ -142,6 +184,11 @@ const isFormInvalid = computed(() => {
 }
 .two-factor__error {
   color: red;
+  font-size: 0.9em;
+  text-align: center;
+}
+.two-factor__status {
+  color: green;
   font-size: 0.9em;
   text-align: center;
 }

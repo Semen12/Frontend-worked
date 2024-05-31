@@ -5,32 +5,41 @@
       <div class="password-forgot__form-group">
         <label for="email" class="password-forgot__label">Введите email</label>
         <input type="email" id="email" v-model="email" class="password-forgot__input" required />
+        <div v-if="emailError" class="password-forgot__error">{{ emailError }}</div>
       </div>
-      <button class="password-forgot__button">Отправить ссылку для </button>
+      <button class="password-forgot__button">Отправить ссылку для восстановления</button>
     </form>
     <div v-if="status" class="password-forgot__status">{{ status }}</div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import axios from 'axios';
+import { ref } from 'vue'
+import axios from 'axios'
+import { useAuthStore } from '@/stores/auth'
 
-const email = ref('');
-const status = ref('');
+const email = ref('')
+const status = ref('')
+const emailError = ref('')
 
 const sendResetLink = async () => {
-  try {
-    const response = await axios.post( '/password-forgot', { email: email.value });
-    status.value = response.data.status;
-  } catch (error) {
-    console.error('Ошибка при отправке ссылки на восстановление пароля:', error);
-    const errors = error.response.data.errors;
-    if (errors.password){
-      status.value = errors.password;
-    }
+  status.value = ''
+  emailError.value = ''
+  if (!email.value) {
+    event.preventDefault()
+    return
   }
-};
+  try {
+    await axios.get('/sanctum/csrf-cookie').then(async () => {
+       const response = await axios.post('/password-forgot', { email: email.value })
+    status.value = response.data.status
+    })
+  } catch (error) {
+    console.error('Ошибка при отправке ссылки на восстановление пароля:', error)
+    const errors = error.response.data.errors
+    emailError.value = Object.values(errors).join(' ')
+  }
+}
 </script>
 
 <style scoped>
@@ -98,5 +107,9 @@ const sendResetLink = async () => {
   color: #0a4919;
   text-align: center;
 }
+.password-forgot__error {
+  color: red;
+  font-size: 0.9em;
+  text-align: center;
+}
 </style>
-

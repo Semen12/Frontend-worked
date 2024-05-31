@@ -47,13 +47,13 @@ const router = createRouter({
       path: '/password-forgot',
       name: 'PasswordForgot',
       component: ForgotPassword,
-      meta: { requiresGuest: true },
+      meta: { requiresGuest: true }
     },
     {
       path: '/password-reset',
       name: 'PasswordReset',
       component: ResetPassword,
-      meta: { requiresGuest: true },
+      meta: { requiresGuest: true }
     },
     {
       path: '/home',

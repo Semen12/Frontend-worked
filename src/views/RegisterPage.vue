@@ -12,13 +12,7 @@
       </div>
       <div class="register__form-group">
         <label for="email" class="register__label">Email</label>
-        <input
-          type="email"
-          id="email"
-          v-model="email"
-          class="register__input"
-          required
-        />
+        <input type="email" id="email" v-model="email" class="register__input" required />
         <div v-if="emailError" class="register__error">
           {{ emailError }}
         </div>
@@ -63,6 +57,7 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import axios from 'axios';
 
 const name = ref('')
 const email = ref('')
@@ -78,29 +73,39 @@ const authStore = useAuthStore()
 const router = useRouter()
 
 const register = async () => {
-  await authStore.fetchCsrfToken()
+  nameError.value = ''
+  emailError.value = ''
+  passwordError.value = ''
+  passwordErrorTwo.value = ''
+
+  if (isFormInvalid.value) {
+    event.preventDefault()
+    return
+  }
   try {
-    await authStore.register({
+    await axios.get('/sanctum/csrf-cookie').then( async () => {
+     await authStore.register({
       name: name.value,
       email: email.value,
       password: password.value,
       password_confirmation: password_confirmation.value
     })
-    await router.push('/about')
+   await router.push('/about')
+  })
   } catch (error) {
     console.error('Registration failed:', error)
     const errors = error.response.data.errors
     if (errors.name) {
-      nameError.value = errors.name[0]
+      nameError.value = Object.values(errors.name).join(' ')
     }
     if (errors.email) {
-      emailError.value = errors.email[0]
+      emailError.value = Object.values(errors.email).join(' ')
     }
     if (errors.password) {
-      passwordError.value = errors.password[0]
+      passwordError.value = Object.values(errors.password).join(' ')
     }
     if (errors.password_confirmation) {
-      passwordErrorTwo.value = errors.password_confirmation[0]
+      passwordErrorTwo.value = Object.values(errors.password_confirmation).join(' ')
     }
   }
 }
@@ -154,8 +159,6 @@ const isFormInvalid = computed(() => {
     !name.value
   )
 })
-
-
 </script>
 
 <style scoped>

@@ -4,13 +4,31 @@
     <form class="password-reset__form" @submit.prevent="resetPassword">
       <div class="password-reset__form-group">
         <label for="password" class="password-reset__label">Новый пароль</label>
-        <input :type="ShowPassword ? 'text' : 'password'" @input="validatePassword" id="password" v-model="password" class="password-reset__input" required />
-        <button type="button" @click="togleShowPassword" class="password-reset__toggle">{{ ShowPassword ? 'Скрыть' : 'Показать' }}</button>
+        <input
+          :type="ShowPassword ? 'text' : 'password'"
+          @input="validatePassword"
+          id="password"
+          v-model="password"
+          class="password-reset__input"
+          required
+        />
+        <button type="button" @click="togleShowPassword" class="password-reset__toggle">
+          {{ ShowPassword ? 'Скрыть' : 'Показать' }}
+        </button>
         <div v-if="passwordError" class="password-reset__error">{{ passwordError }}</div>
       </div>
       <div class="password-reset__form-group">
-        <label for="password_confirmation" class="password-reset__label">Подтвердите новый пароль</label>
-        <input :type="showConfirmPassword ? 'text' : 'password'" @input="validatePasswordConfirm" id="password_confirmation" v-model="password_confirmation" class="password-reset__input" required />
+        <label for="password_confirmation" class="password-reset__label"
+          >Подтвердите новый пароль</label
+        >
+        <input
+          :type="showConfirmPassword ? 'text' : 'password'"
+          @input="validatePasswordConfirm"
+          id="password_confirmation"
+          v-model="password_confirmation"
+          class="password-reset__input"
+          required
+        />
         <button type="button" @click="toggleShowConfirmPassword" class="password-reset__toggle">
           {{ showConfirmPassword ? 'Скрыть' : 'Показать' }}
         </button>
@@ -24,75 +42,83 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import axios from 'axios';
+import { ref, onMounted, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import axios from 'axios'
 import { useAuthStore } from '@/stores/auth.js'
 
-const route = useRoute();
-const router = useRouter();
+const route = useRoute()
+const router = useRouter()
 
-const email = ref('');
-const token = ref('');
-const password = ref('');
-const password_confirmation = ref('');
-const status = ref('');
-const passwordError = ref('');
-const passwordErrorTwo = ref('');
-const emailError = ref('');
+const email = ref('')
+const token = ref('')
+const password = ref('')
+const password_confirmation = ref('')
+const status = ref('')
+const passwordError = ref('')
+const passwordErrorTwo = ref('')
+const emailError = ref('')
 
 onMounted(() => {
-  email.value = route.query.email || '';
-  token.value = route.query.token || '';
-  if(!email.value || !token.value) {
-    router.push({ name: 'Login' });
+  email.value = route.query.email || ''
+  token.value = route.query.token || ''
+  if (!email.value || !token.value) {
+    router.push({ name: 'Login' })
   }
-});
+})
 
 const resetPassword = async () => {
-  passwordError.value = '';
-  passwordErrorTwo.value = '';
-  emailError.value = '';
-  status.value = '';
+  passwordError.value = ''
+  passwordErrorTwo.value = ''
+  emailError.value = ''
+  status.value = ''
+  if (isFormInvalid.value) {
+    event.preventDefault()
+    return
+  }
   try {
-    await useAuthStore().fetchCsrfToken()
-    const response = await axios.post( '/password-reset', {
+    await axios.get('/sanctum/csrf-cookie').then(async () => {
+      const response = await axios.post('/password-reset', {
       email: email.value,
       token: token.value,
       password: password.value,
-      password_confirmation: password_confirmation.value,
-    });
-    status.value = response.data.status;
+      password_confirmation: password_confirmation.value
+    })
+    status.value = response.data.status
     if (response.status === 200) {
       // Добавляем задержку перед перенаправлением на страницу логина
       setTimeout(async () => {
-        await router.push({ name: 'Login' });
-      }, 3000); // Задержка в 2 секунды 
+        await router.push({ name: 'Login' })
+      }, 1500) // Задержка в 3 секунды
     }
+    });
+    
   } catch (error) {
-    console.error('Ошибка при сбросе пароля:', error);
-    const errors = error.response.data.errors;
+    console.error('Ошибка при сбросе пароля:', error)
+    const errors = error.response.data.errors
     if (errors.password) {
-      passwordError.value = Object.values(errors.password).join(' '); // вот так корректно извлекать ошибки!!!
+      passwordError.value = Object.values(errors.password).join(' ') // вот так корректно извлекать ошибки!!!
     }
     if (errors.password_confirmation) {
-      passwordErrorTwo.value = Object.values(errors.password_confirmation).join(' ');
+      passwordErrorTwo.value = Object.values(errors.password_confirmation).join(' ')
     }
-    if(errors.email) {
-      emailError.value = Object.values(errors.email).join(' ') +  ' Попробуйте запросить ссылку для восстановления заново.';
+    if (errors.email) {
+      emailError.value =
+        Object.values(errors.email).join(' ') +
+        ' Попробуйте запросить ссылку для восстановления заново.'
     }
   }
-};
+}
 
-const showConfirmPassword = ref(false);
+const showConfirmPassword = ref(false)
 const toggleShowConfirmPassword = () => {
-  showConfirmPassword.value = !showConfirmPassword.value;
-};
+  showConfirmPassword.value = !showConfirmPassword.value
+}
 
-const ShowPassword = ref(false);
+const ShowPassword = ref(false)
 const togleShowPassword = () => {
-  ShowPassword.value = !ShowPassword.value;
-};
+  ShowPassword.value = !ShowPassword.value
+}
 
 const validatePassword = () => {
   const passwordValue = password.value
@@ -135,7 +161,6 @@ const isFormInvalid = computed(() => {
     !token.value
   )
 })
-
 </script>
 
 <style scoped>
@@ -161,7 +186,7 @@ const isFormInvalid = computed(() => {
   flex-direction: column;
   gap: 15px;
 
- min-width: 30%;
+  min-width: 30%;
 }
 
 .password-reset__form-group {
@@ -205,7 +230,7 @@ const isFormInvalid = computed(() => {
   color: #28a745;
   text-align: center;
 }
-.password-reset__toggle{
+.password-reset__toggle {
   position: absolute;
   right: 10px;
   top: 40px;

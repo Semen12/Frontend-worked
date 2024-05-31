@@ -7,10 +7,14 @@ export const useAuthStore = defineStore('auth', {
     twoFactorRequired: false
   }),
   getters: {
-   
     isAuthenticated: (state) => !!state.user
   },
+
   actions: {
+    async clearAllData() {
+      this.user = null
+      this.twoFactorRequired = false
+    },
     async fetchCsrfToken() {
       await axios.get('/sanctum/csrf-cookie')
     },
@@ -33,36 +37,46 @@ export const useAuthStore = defineStore('auth', {
         return response
       } catch (error) {
         console.log('Login error', error)
+        throw error
       }
     },
     async register(credentials) {
       try {
         const response = await axios.post('/register', credentials)
-        this.user = response.data
+        this.user = response.data.user
         // await this.fetchUser();
+        return response
       } catch (error) {
         this.user = null
         console.log('Register error', error)
+        throw error
       }
     },
-    async verifyTwoFactorCode(data) {
+    async verifyTwoFactorCode(credentials) {
       try {
-        await axios.post('/two-factor-challenge', data)
+       const response =  await axios.post('/two-factor-challenge', credentials)       
         this.twoFactorRequired = false
         await this.fetchUser()
+        
+       return response
       } catch (error) {
         console.log('Verify two factor code error', error)
-      }
+        throw error;
+      } 
     },
+   
+  
     logout() {
       axios.post('/logout').then(() => {
-        try {
+       
           this.user = null
           this.twoFactorRequired = false
-        } catch (error) {
-          console.log('Logout error', error)
-        }
+      }).catch((error) => {
+        console.log('Logout error', error)
       })
+          
+        
+      
     }
   }
 })
