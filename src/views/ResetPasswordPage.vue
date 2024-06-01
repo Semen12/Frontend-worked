@@ -4,34 +4,36 @@
     <form class="password-reset__form" @submit.prevent="resetPassword">
       <div class="password-reset__form-group">
         <label for="password" class="password-reset__label">Новый пароль</label>
-        <input
-          :type="ShowPassword ? 'text' : 'password'"
-          @input="validatePassword"
-          id="password"
-          v-model="password"
-          class="password-reset__input"
-          required
-        />
-        <button type="button" @click="togleShowPassword" class="password-reset__toggle">
-          {{ ShowPassword ? 'Скрыть' : 'Показать' }}
-        </button>
+        <div class="password-reset__input-container">
+          <input
+            :type="ShowPassword ? 'text' : 'password'"
+            @input="validatePassword"
+            id="password"
+            v-model="password"
+            class="password-reset__input"
+            required
+          />
+          <button type="button" @click="togleShowPassword" class="password-reset__toggle">
+            {{ ShowPassword ? 'Скрыть' : 'Показать' }}
+          </button>
+        </div>
         <div v-if="passwordError" class="password-reset__error">{{ passwordError }}</div>
       </div>
       <div class="password-reset__form-group">
-        <label for="password_confirmation" class="password-reset__label"
-          >Подтвердите новый пароль</label
-        >
-        <input
-          :type="showConfirmPassword ? 'text' : 'password'"
-          @input="validatePasswordConfirm"
-          id="password_confirmation"
-          v-model="password_confirmation"
-          class="password-reset__input"
-          required
-        />
-        <button type="button" @click="toggleShowConfirmPassword" class="password-reset__toggle">
-          {{ showConfirmPassword ? 'Скрыть' : 'Показать' }}
-        </button>
+        <label for="password_confirmation" class="password-reset__label">Подтвердите новый пароль</label>
+        <div class="password-reset__input-container">
+          <input
+            :type="showConfirmPassword ? 'text' : 'password'"
+            @input="validatePasswordConfirm"
+            id="password_confirmation"
+            v-model="password_confirmation"
+            class="password-reset__input"
+            required
+          />
+          <button type="button" @click="toggleShowConfirmPassword" class="password-reset__toggle">
+            {{ showConfirmPassword ? 'Скрыть' : 'Показать' }}
+          </button>
+        </div>
         <div v-if="passwordErrorTwo" class="password-reset__error">{{ passwordErrorTwo }}</div>
       </div>
       <button class="password-reset__button" :disabled="isFormInvalid">Сбросить пароль</button>
@@ -40,6 +42,7 @@
     <div v-if="emailError" class="password-reset__error">{{ emailError }}</div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
@@ -79,20 +82,19 @@ const resetPassword = async () => {
   try {
     await axios.get('/sanctum/csrf-cookie').then(async () => {
       const response = await axios.post('/password-reset', {
-      email: email.value,
-      token: token.value,
-      password: password.value,
-      password_confirmation: password_confirmation.value
+        email: email.value,
+        token: token.value,
+        password: password.value,
+        password_confirmation: password_confirmation.value
+      })
+      status.value = response.data.status
+      if (response.status === 200) {
+        // Добавляем задержку перед перенаправлением на страницу логина
+        setTimeout(async () => {
+          await router.push({ name: 'Login' })
+        }, 1500) // Задержка в 1.5 секунды
+      }
     })
-    status.value = response.data.status
-    if (response.status === 200) {
-      // Добавляем задержку перед перенаправлением на страницу логина
-      setTimeout(async () => {
-        await router.push({ name: 'Login' })
-      }, 1500) // Задержка в 3 секунды
-    }
-    });
-    
   } catch (error) {
     console.error('Ошибка при сбросе пароля:', error)
     const errors = error.response.data.errors
@@ -163,7 +165,7 @@ const isFormInvalid = computed(() => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .password-reset {
   display: flex;
   flex-direction: column;
@@ -172,76 +174,100 @@ const isFormInvalid = computed(() => {
   min-height: 100vh;
   width: 100vw;
   background-color: #f9f9f9;
-}
+  padding: 20px;
 
-.password-reset__title {
-  font-size: 2em;
-  margin-bottom: 20px;
-  color: #2c3e50;
-  text-align: center;
-}
+  &__title {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    text-align: center;
+  }
 
-.password-reset__form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    max-width: 450px;
+    padding: 20px;
+    border-radius: 8px;
+  }
 
-  min-width: 30%;
-}
+  &__form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
 
-.password-reset__form-group {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  max-width: 150%;
-}
+    @media (min-width: 768px) {
+      flex-direction: column;
+    }
+  }
 
-.password-reset__label {
-  margin-bottom: 5px;
-  color: #8e8edd;
-}
+  &__label {
+    margin-bottom: 5px;
+    color: #8e8edd;
+  }
 
-.password-reset__input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
+  &__input-container {
+    display: flex;
+    align-items: center;
+    position: relative;
 
-.password-reset__button {
-  padding: 10px 20px;
-  font-size: 1.2em;
-  color: white;
-  background-color: #42b983;
-  border: none;
-  border-radius: 5px;
-}
+    @media (min-width: 768px) {
+      flex: 1;
+      margin-bottom: 0;
+    }
+  }
 
-.password-reset__button:hover {
-  background-color: #369870;
-}
+  &__input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex: 1;
+    width: 100%;
+  }
 
-.password-reset__button:disabled {
-  background-color: #cccccc;
-}
+  &__toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #42b983;
+  }
 
-.password-reset__status {
-  margin-top: 20px;
-  font-size: 1rem;
-  color: #28a745;
-  text-align: center;
-}
-.password-reset__toggle {
-  position: absolute;
-  right: 10px;
-  top: 40px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #42b983;
-}
-.password-reset__error {
-  color: red;
-  font-size: 0.9em;
-  text-align: center;
+  &__button {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    color: white;
+    background-color: #42b983;
+    border: none;
+    border-radius: 5px;
+    margin-top: 5px;
+
+    &:hover {
+      background-color: #369870;
+    }
+
+    &:disabled {
+      background-color: #cccccc;
+    }
+  }
+
+  &__status {
+    margin-top: 20px;
+    font-size: 1rem;
+    color: #28a745;
+    text-align: center;
+  }
+
+  &__error {
+    color: red;
+    font-size: 0.9em;
+    text-align: center;
+    margin-top: 5px;
+  }
 }
 </style>

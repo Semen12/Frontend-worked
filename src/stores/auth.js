@@ -21,7 +21,7 @@ export const useAuthStore = defineStore('auth', {
     async fetchUser() {
       try {
         const response = await axios.get('/user')
-        this.user = response.data
+        this.user = response.data.user
       } catch (error) {
         this.user = null
         console.log('Fetch user error', error)

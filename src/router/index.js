@@ -13,11 +13,12 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      /*  path: '/',
-      redirect: (to) => {
+        path: '/',
+     /*  redirect: () => {
         const authStore = useAuthStore();
-        return authStore.isAuthenticated ? { name: 'Home' } : { name: 'Guest' };
-      },*/
+        authStore.fetchUser();
+        return authStore.isAuthenticated ? { name: 'Guest' }:{ name: 'Home' }  ;
+      }, */
     },
     {
       path: '/guest',
@@ -41,7 +42,7 @@ const router = createRouter({
       path: '/two-factor',
       name: 'TwoFactor',
       component: TwoFactor
-      // meta: { requiresAuth: true, requiresTwoFactor: true },
+      // meta: { requiresGuest:true , requiresTwoFactor: true },
     },
     {
       path: '/password-forgot',
