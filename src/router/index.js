@@ -7,6 +7,8 @@ import Login from '@/views/LoginPage.vue'
 import TwoFactor from '@/views/TwoFactorPage.vue'
 import ForgotPassword from '@/views/ForgotPasswordPage.vue'
 import ResetPassword from '@/views/ResetPasswordPage.vue'
+import EmailVerify from '@/views/EmailVerifyPage.vue'
+import UserProfile from '@/views/UserProfilePage.vue'
 import { useAuthStore } from '@/stores/auth.js'
 
 const router = createRouter({
@@ -55,6 +57,18 @@ const router = createRouter({
       name: 'PasswordReset',
       component: ResetPassword,
       meta: { requiresGuest: true }
+    },
+    {
+      path:'/email-verify',
+      name: 'EmailVerify',
+      component: EmailVerify,
+      meta: { requiresAuth: true }
+    },
+    {
+      path:'/user',
+      name: 'UserProfile',
+      component: UserProfile,
+      meta: { requiresAuth: true }
     },
     {
       path: '/home',
