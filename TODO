@@ -9,12 +9,12 @@
   GET|HEAD  check-master-password ............................................................................. check.master.password › MasterPasswordController@checkMasterPassword
   GET|HEAD  email-verify .......................................................................................................... verification.verify › Auth\VerifyEmailController
   POST      email/verification-notification ................................................................. verification.send › Auth\EmailVerificationNotificationController@store
-  POST      login ........................................................................................................... Laravel\Fortify › AuthenticatedSessionController@store
+      [+]POST      login ........................................................................................................... Laravel\Fortify › AuthenticatedSessionController@store
   POST      logout ............................................................................................... logout › Laravel\Fortify › AuthenticatedSessionController@destroy
-  POST      password-forgot ................................................................................................ password.email › Auth\PasswordResetLinkController@store
-  POST      password-reset ....................................................................................................... password.reset › Auth\NewPasswordController@store
-  POST      register ........................................................................................................ register.sanctum › Auth\RegisteredUserController@store
-  +GET|HEAD  sanctum/csrf-cookie .................................................................................. sanctum.csrf-cookie › Laravel\Sanctum › CsrfCookieController@show
+      [+]POST      password-forgot ................................................................................................ password.email › Auth\PasswordResetLinkController@store
+      [+]POST      password-reset ....................................................................................................... password.reset › Auth\NewPasswordController@store
+      [+]POST      register ........................................................................................................ register.sanctum › Auth\RegisteredUserController@store
+      [+]GET|HEAD  sanctum/csrf-cookie .................................................................................. sanctum.csrf-cookie › Laravel\Sanctum › CsrfCookieController@show
   POST      set-master-password ................................................................................... set.master.password › MasterPasswordController@setMasterPassword
   POST      two-factor-challenge ................................................................................... Laravel\Fortify › TwoFactorAuthenticatedSessionController@store
   GET|HEAD  up .....................................................................................................................................................................
