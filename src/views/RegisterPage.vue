@@ -1,50 +1,36 @@
 <template>
   <div class="register">
-    <!--   !!! Возможно убрать автозаполнение для пароля, сейчас для теста нужно-->
     <h1 class="register__title">Регистрация</h1>
     <form class="register__form" @submit.prevent="register" autocomplete="on">
       <div class="register__form-group">
         <label for="name" class="register__label">Имя</label>
         <input type="text" id="name" v-model="name" class="register__input" required />
-        <div v-if="nameError" class="register__error">
-          {{ nameError }}
-        </div>
+        <div v-if="nameError" class="register__error">{{ nameError }}</div>
       </div>
       <div class="register__form-group">
         <label for="email" class="register__label">Email</label>
         <input type="email" id="email" v-model="email" class="register__input" required />
-        <div v-if="emailError" class="register__error">
-          {{ emailError }}
-        </div>
+        <div v-if="emailError" class="register__error">{{ emailError }}</div>
       </div>
       <div class="register__form-group">
         <label for="password" class="register__label">Пароль</label>
-        <input
-          :type="showPassword ? 'text' : 'password'"
-          id="password"
-          v-model="password"
-          class="register__input error"
-          @input="validatePassword"
-          required
-        />
-        <button type="button" @click="toggleShowPassword" class="register__toggle-password">
+       <div class="register__input-container"><input :type="showPassword ? 'text' : 'password'" id="password" v-model="password" class="register__input" @input="validatePassword" required />
+        <button type="button" @click="toggleShowPassword" class="register__toggle">
           {{ showPassword ? 'Скрыть' : 'Показать' }}
         </button>
+      </div>
+        
       </div>
       <div v-if="passwordError" class="register__error">{{ passwordError }}</div>
       <div class="register__form-group">
         <label for="password_confirmation" class="register__label">Подтвердите пароль</label>
-        <input
-          :type="showConfirmPassword ? 'text' : 'password'"
-          id="password_confirmation"
-          v-model="password_confirmation"
-          class="register__input error"
-          @input="validatePasswordConfirm"
-          required
-        />
-        <button type="button" @click="toggleShowConfirmPassword" class="register__toggle-password">
+       <div class="register__input-container">
+        <input :type="showConfirmPassword ? 'text' : 'password'" id="password_confirmation" v-model="password_confirmation" class="register__input" @input="validatePasswordConfirm" required />
+        <button type="button" @click="toggleShowConfirmPassword" class="register__toggle">
           {{ showConfirmPassword ? 'Скрыть' : 'Показать' }}
         </button>
+      </div> 
+        
       </div>
       <div v-if="passwordErrorTwo" class="register__error">{{ passwordErrorTwo }}</div>
       <button class="register__button" :disabled="isFormInvalid">Регистрация</button>
@@ -138,8 +124,6 @@ const validatePassword = () => {
   } else {
     passwordError.value = ''
   }
-
-  // validatePasswordConfirm()
 }
 
 const validatePasswordConfirm = () => {
@@ -161,7 +145,7 @@ const isFormInvalid = computed(() => {
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .register {
   display: flex;
   flex-direction: column;
@@ -170,78 +154,122 @@ const isFormInvalid = computed(() => {
   min-height: 100vh;
   width: 100vw;
   background-color: #f9f9f9;
-  flex: 1 0 100%;
-}
+  padding: 20px;
 
-.register__title {
-  font-size: 2em;
-  margin-bottom: 20px;
-  color: #333;
-  text-align: center;
-}
-.register__link {
-  text-align: center;
-}
-.register__form {
-  display: flex;
-  flex-direction: column;
-  gap: 21px;
-}
+  &__title {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    text-align: center;
+  }
 
-.register__form-group {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  max-width: 150%;
-}
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    max-width: 450px;
+    padding: 20px;
+    border-radius: 8px;
+  }
 
-.register__label {
-  margin-bottom: 5px;
-  color: #8e8edd;
-}
+  &__form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    &:nth-child(2) {
+      margin-bottom: 0px;
+    }
+    @media (min-width: 768px) {
+      flex-direction: column;
+    }
 
-.register__input {
-  padding: 10px 0 10px 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-}
-#password,
-#password_confirmation {
-  padding-right: 75px;
-}
+    &--checkbox {
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+       margin-bottom: 0px;
+      /* .login__label {
+        margin-bottom: 0;
+      } */
+    }
+  }
 
-.register__toggle-password {
-  position: absolute;
-  right: 10px;
-  top: 40px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #42b983;
-}
+  &__label {
+    margin-bottom: 5px;
+    color: #8e8edd;
+  }
 
-.register__button {
-  padding: 10px 20px;
-  font-size: 1.2em;
-  color: white;
-  background-color: #42b983;
-  border: none;
-  border-radius: 5px;
-}
+  &__input-container {
+    display: flex;
+    align-items: center;
+    position: relative;
 
-.register__button:hover {
-  background-color: #369870;
+    @media (min-width: 768px) {
+      flex: 1;
+      margin-bottom: 0;
+    }
+  }
+
+  &__input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex: 1;
+    width: 100%;
+  }
+
+  &__toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #42b983;
+  }
+
+  &__button {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    color: white;
+    background-color: #42b983;
+    border: none;
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    &:hover {
+      background-color: #369870;
+    }
+
+    &:disabled {
+      background-color: #cccccc;
+    }
+  }
+  &__forgot-password {
+    text-align: center;
+    font: 0.9em sans-serif;
+    margin-bottom: 5px;
+    padding: 7px;
+  }
+  &__link {
+    text-align: center;
+  }
+  &__status {
+    margin-top: 20px;
+    font-size: 1rem;
+    color: #28a745;
+    text-align: center;
+  }
+
+  &__error {
+    color: red;
+    font-size: 0.9em;
+    text-align: center;
+    margin-top: 5px;
+  }
 }
-.register__button:disabled {
-  background-color: #cccccc;
-}
-.register__error {
-  color: red;
-  font-size: 0.9em;
-  text-align: center;
-}
-/*.error {
-  border: 2px solid orange;
-}*/
 </style>

@@ -6,7 +6,7 @@ import VueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), VueDevTools({ launchEditor: 'webstorm' })],
+  plugins: [vue(), VueDevTools({ launchEditor: 'vscode' })],
   css: {
     preprocessorOptions: {
       scss: {
