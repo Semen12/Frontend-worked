@@ -34,11 +34,11 @@
   POST      user/two-factor-recovery-codes .......................................................................................... Laravel\Fortify › RecoveryCodeController@store
   GET|HEAD  user/two-factor-secret-key ................................................................. two-factor.secret-key › Laravel\Fortify › TwoFactorSecretKeyController@show
   POST      user/two-factor/send-confirmation-code ................................ two-factor.send-confirmation-code › CustomTwoFactorAuthenticationController@sendConfirmationCode
-  POST      user/update-email-sent ...................................................................................... profile.sentсode.emails › ProfileController@sendCodeEmails
-  PATCH     user/update-email-unverified ........................................................................ profile.email.unverified › ProfileController@updateEmailUnverified
-  PATCH     user/update-email-verified .............................................................................. profile.email.verified › ProfileController@updateEmailVerified
+      +[]POST      user/update-email-sent ...................................................................................... profile.sentсode.emails › ProfileController@sendCodeEmails
+      +[]PATCH     user/update-email-unverified ........................................................................ profile.email.unverified › ProfileController@updateEmailUnverified
+      +[]PATCH     user/update-email-verified .............................................................................. profile.email.verified › ProfileController@updateEmailVerified
   PATCH     user/update-master-password ................................................................................... master.password.update › MasterPasswordController@update
-  PATCH     user/update-name ........................................................................................................... profile.name › ProfileController@updateName
+      +[]PATCH     user/update-name ........................................................................................................... profile.name › ProfileController@updateName
 
   [+] - подправить дизайн страницы регистрации (страница работает , т.е. может отправлять запрос на регистрацию)
         [+] - если поля не заполнены, то кнопка неактивна

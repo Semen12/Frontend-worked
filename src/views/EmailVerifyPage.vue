@@ -53,9 +53,9 @@
      
         if ( err.response.status === 403 || err.response.status === 500) {
             error.value = 'Попробуйте отправить ссылку еще раз. Перенаправляем на страницу профиля.'
-            /* setTimeout(() => {
+            setTimeout(() => {
             router.push({ name: 'UserProfile' })
-            }, 1800) */
+            }, 1500)
           
         }
     

@@ -22,9 +22,11 @@ export const useAuthStore = defineStore('auth', {
       try {
         const response = await axios.get('/user')
         this.user = response.data.user
+        return response
       } catch (error) {
         this.user = null
         console.log('Fetch user error', error)
+        throw error
       }
     },
     async login(credentials) {
