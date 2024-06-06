@@ -67,7 +67,7 @@ const verifyCode = async () => {
     if (response.status === 204) {
       twofactorStatus.value = 'Ваш код был успешно подтвержден. Вы будете перенаправлены на главную страницу.'
       setTimeout(async () => {
-        await router.push({ name: 'Home' })
+        await router.push({ name: 'UserProfile' })
       }, 1500)
     }
   } catch (error) {

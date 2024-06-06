@@ -29,6 +29,11 @@ export const useAuthStore = defineStore('auth', {
         throw error
       }
     },
+    setMasterPassword(masterPassword) {
+      if (this.user) {
+        this.user.master_password = masterPassword;
+      }
+    },
     async login(credentials) {
       try {
         const response = await axios.post('/login', credentials)

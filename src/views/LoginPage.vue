@@ -45,7 +45,7 @@ import { useAuthStore } from '@/stores/auth.js'
 import axios from 'axios'
 
 onMounted(() => {
-  authStore.fetchCsrfToken()
+ /* authStore.fetchCsrfToken()*/
 })
 
 const email = ref('')
@@ -74,7 +74,7 @@ const login = async () => {
       if (res.data.two_factor) {
         router.push('/two-factor')
       } else {
-        router.push('/home')
+        router.push('/user')
       }
     })
   } catch (error) {

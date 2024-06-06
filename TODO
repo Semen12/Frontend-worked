@@ -7,8 +7,8 @@
   PUT       accounts/update/{id} ......................................................................................................... account.update › AccountController@update
   GET|HEAD  accounts/{id} .................................................................................................................... account.show › AccountController@show
   GET|HEAD  check-master-password ............................................................................. check.master.password › MasterPasswordController@checkMasterPassword
-  GET|HEAD  email-verify .......................................................................................................... verification.verify › Auth\VerifyEmailController
-  POST      email/verification-notification ................................................................. verification.send › Auth\EmailVerificationNotificationController@store
+  []GET|HEAD  email-verify .......................................................................................................... verification.verify › Auth\VerifyEmailController
+      [+]POST      email/verification-notification ................................................................. verification.send › Auth\EmailVerificationNotificationController@store
       [+]POST      login ........................................................................................................... Laravel\Fortify › AuthenticatedSessionController@store
       [] POST      logout ............................................................................................... logout › Laravel\Fortify › AuthenticatedSessionController@destroy
       [+]POST      password-forgot ................................................................................................ password.email › Auth\PasswordResetLinkController@store
@@ -16,29 +16,28 @@
       [+]POST      register ........................................................................................................ register.sanctum › Auth\RegisteredUserController@store
       [+]GET|HEAD  sanctum/csrf-cookie .................................................................................. sanctum.csrf-cookie › Laravel\Sanctum › CsrfCookieController@show
   POST      set-master-password ................................................................................... set.master.password › MasterPasswordController@setMasterPassword
-  POST      two-factor-challenge ................................................................................... Laravel\Fortify › TwoFactorAuthenticatedSessionController@store
-  GET|HEAD  up .....................................................................................................................................................................
-  GET|HEAD  user ...................................................................................................................................................................
-  POST      user/confirm-password ......................................................................... password.confirm › Laravel\Fortify › ConfirmablePasswordController@store
-  GET|HEAD  user/confirmed-password-status ........................................................ password.confirmation › Laravel\Fortify › ConfirmedPasswordStatusController@show
-  POST      user/confirmed-two-factor-authentication ....................................... two-factor.confirm › Laravel\Fortify › ConfirmedTwoFactorAuthenticationController@store
-  POST      user/create-master-password .................................................................................... master.password.create › MasterPasswordController@store
+      [+]POST      two-factor-challenge ................................................................................... Laravel\Fortify › TwoFactorAuthenticatedSessionController@store
+      [+]GET|HEAD  user ...................................................................................................................................................................
+      [+]POST      user/confirm-password ......................................................................... password.confirm › Laravel\Fortify › ConfirmablePasswordController@store
+           (запрос всегда на conform-password) [+]GET|HEAD  user/confirmed-password-status ........................................................ password.confirmation › Laravel\Fortify › ConfirmedPasswordStatusController@show
+      [+]POST      user/confirmed-two-factor-authentication ....................................... two-factor.confirm › Laravel\Fortify › ConfirmedTwoFactorAuthenticationController@store
+      [+]POST      user/create-master-password .................................................................................... master.password.create › MasterPasswordController@store
   DELETE    user/destroy ................................................................................................................ profile.delete › ProfileController@destroy
   POST      user/link-master-password .......................................................................... sendResetLinkForMasterPassword › MasterPasswordController@resetLink
-  PATCH     user/password-update .................................................................................................. password.update › Auth\PasswordController@update
-  POST      user/reset-master-password ...................................................................................... reset.master.password › MasterPasswordController@reset
-  POST      user/two-factor-authentication ........................................................... two-factor.enable › Laravel\Fortify › TwoFactorAuthenticationController@store
-  DELETE    user/two-factor-authentication .................................................................... two-factor.disable › CustomTwoFactorAuthenticationController@destroy
-  GET|HEAD  user/two-factor-qr-code .......................................................................... two-factor.qr-code › Laravel\Fortify › TwoFactorQrCodeController@show
+      [+]PATCH     user/password-update .................................................................................................. password.update › Auth\PasswordController@update
+[]POST      user/reset-master-password ...................................................................................... reset.master.password › MasterPasswordController@reset
+      [+]POST      user/two-factor-authentication ........................................................... two-factor.enable › Laravel\Fortify › TwoFactorAuthenticationController@store
+      [+]DELETE    user/two-factor-authentication .................................................................... two-factor.disable › CustomTwoFactorAuthenticationController@destroy
+      [+]GET|HEAD  user/two-factor-qr-code .......................................................................... two-factor.qr-code › Laravel\Fortify › TwoFactorQrCodeController@show
   GET|HEAD  user/two-factor-recovery-codes .............................................................. two-factor.recovery-codes › Laravel\Fortify › RecoveryCodeController@index
   POST      user/two-factor-recovery-codes .......................................................................................... Laravel\Fortify › RecoveryCodeController@store
   GET|HEAD  user/two-factor-secret-key ................................................................. two-factor.secret-key › Laravel\Fortify › TwoFactorSecretKeyController@show
-  POST      user/two-factor/send-confirmation-code ................................ two-factor.send-confirmation-code › CustomTwoFactorAuthenticationController@sendConfirmationCode
-      +[]POST      user/update-email-sent ...................................................................................... profile.sentсode.emails › ProfileController@sendCodeEmails
-      +[]PATCH     user/update-email-unverified ........................................................................ profile.email.unverified › ProfileController@updateEmailUnverified
-      +[]PATCH     user/update-email-verified .............................................................................. profile.email.verified › ProfileController@updateEmailVerified
-  PATCH     user/update-master-password ................................................................................... master.password.update › MasterPasswordController@update
-      +[]PATCH     user/update-name ........................................................................................................... profile.name › ProfileController@updateName
+      [+]POST      user/two-factor/send-confirmation-code ................................ two-factor.send-confirmation-code › CustomTwoFactorAuthenticationController@sendConfirmationCode
+      [+]POST      user/update-email-sent ...................................................................................... profile.sentсode.emails › ProfileController@sendCodeEmails
+      [+]PATCH     user/update-email-unverified ........................................................................ profile.email.unverified › ProfileController@updateEmailUnverified
+      [+]PATCH     user/update-email-verified .............................................................................. profile.email.verified › ProfileController@updateEmailVerified
+      [+]PATCH     user/update-master-password ................................................................................... master.password.update › MasterPasswordController@update
+      [+]PATCH     user/update-name ........................................................................................................... profile.name › ProfileController@updateName
 
   [+] - подправить дизайн страницы регистрации (страница работает , т.е. может отправлять запрос на регистрацию)
         [+] - если поля не заполнены, то кнопка неактивна
@@ -59,10 +58,16 @@
       [+] - адаптация 
 
 
+[]- в блоке включения/отлюкчения 2fa а ля добавить кнопку показать/скрыть пароль и кнопки например сделать неактивными если нет символов в полях вода 
+[] - возможно реализовать новый показ кодов восстановления ( по коду и смс ) - доделать уже возможно в процессе написания диплома
  [] - подумать о перенаправлении на главную страницу если 302  
  [] - подумать о выводе сообщения при статусах перехватичиках на страницу логина  
+ [] - подумат о начальном состоянии при запросах (например " Отправляем запрос на вход " и т.д) (на гостевых формах нет этих состояний)
 !!![] - НЕ ЗАБЫВАТЬ ОБНУЛЯТЬ ОШИБКИ ПРИ ЗАПРОСАХ
 !!![] - ПРОВЕРИТЬ ОБЯЗАТЕЛЬНСТЬ ПОЛЕЙ КАК И НА СЕРВЕРЕ ГДЕ ЭТО НЕОБХОДИМО ТАК И НА СЕРВЕРЕ ГДЕ ЭТО НЕОБХОДИМО
 !!![] - обдумать размещение вызова csfr токена на разных страницах (вход, регистрация, двухфакторкак,ссылка, сброс)
              на главной странице и в профиле строго без запроса csfr токена
 !!![] - ДИЗАЙН СТРАНИЦ (ИХ АДАПТАЦИЯ)
+
+[] занести запись о некотрых маршутах в игнорирование Fortify
+Чтобы измениить сеть работы: env фронта, env бека нужно измемнить

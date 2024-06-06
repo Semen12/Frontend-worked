@@ -76,7 +76,7 @@ const register = async () => {
       password: password.value,
       password_confirmation: password_confirmation.value
     })
-   await router.push('/about')
+   await router.push('/user')
   })
   } catch (error) {
     console.error('Registration failed:', error)
@@ -136,8 +136,6 @@ const validatePasswordConfirm = () => {
 
 const isFormInvalid = computed(() => {
   return (
-    passwordError.value ||
-    passwordErrorTwo.value ||
     !password.value ||
     !password_confirmation.value ||
     !name.value
