@@ -8,7 +8,7 @@
         Учётные записи
       </button>
       <button :class="['home__tab', { 'home__tab--active': activeTab === 'add' }]" @click="setActiveTab('add')">
-        Добавить запись
+        Добавить запись об акаунте
       </button>
     </div>
     <div class="home__content">

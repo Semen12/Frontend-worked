@@ -1,12 +1,13 @@
 // src/routes/index.js
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomePage.vue'
+import HomePage from '../views/HomePage.vue'
 import Guest from '@/views/GuestPage.vue'
 import Register from '@/views/RegisterPage.vue'
 import Login from '@/views/LoginPage.vue'
 import TwoFactor from '@/views/TwoFactorPage.vue'
 import ForgotPassword from '@/views/ForgotPasswordPage.vue'
 import ResetPassword from '@/views/ResetPasswordPage.vue'
+import ResetMasterPassword from '@/views/ResetMasterPasswordPage.vue'
 import EmailVerify from '@/views/EmailVerifyPage.vue'
 import UserProfile from '@/views/UserProfilePage.vue'
 import { useAuthStore } from '@/stores/auth.js'
@@ -43,8 +44,8 @@ const router = createRouter({
     {
       path: '/two-factor',
       name: 'TwoFactor',
-      component: TwoFactor
-      // meta: { requiresGuest:true , requiresTwoFactor: true },
+      component: TwoFactor,
+      meta: { requiresGuest:true , requiresTwoFactor: true },
     },
     {
       path: '/password-forgot',
@@ -71,17 +72,18 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/home',
-      name: 'Home',
-      component: HomeView
-      // meta: { requiresAuth: true },
+      path: '/user/reset-master-password',
+      name: 'ResetMasterPassword',
+      component: ResetMasterPassword,
+      meta: { requiresAuth: true }
     },
     {
-      path: '/about',
-      name: 'About',
-      component: () => import('../views/AboutView.vue')
-      // meta: { requiresAuth: true },
-    }
+      path: '/home',
+      name: 'Home',
+      component: HomePage,
+      meta: { requiresAuth: true },
+    },
+
     /* {
       path: '/:pathMatch(.*)*',
       redirect: '/',
