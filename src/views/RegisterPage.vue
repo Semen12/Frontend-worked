@@ -33,6 +33,7 @@
         
       </div>
       <div v-if="passwordErrorTwo" class="register__error">{{ passwordErrorTwo }}</div>
+      <div v-if="staus" class="register__status">{{ staus }}</div>
       <button class="register__button" :disabled="isFormInvalid">Регистрация</button>
       <router-link :to="'/login'" class="register__link">Уже зарегистрированы? Войти</router-link>
     </form>
@@ -55,28 +56,31 @@ const passwordError = ref('')
 const passwordErrorTwo = ref('')
 const emailError = ref('')
 const nameError = ref('')
+const staus = ref('')
+
 const authStore = useAuthStore()
 const router = useRouter()
 
 const register = async () => {
+   if (isFormInvalid.value) {
+    event.preventDefault()
+    return
+  }
   nameError.value = ''
   emailError.value = ''
   passwordError.value = ''
   passwordErrorTwo.value = ''
-
-  if (isFormInvalid.value) {
-    event.preventDefault()
-    return
-  }
+  staus.value = 'Регистрируем...'
   try {
     await axios.get('/sanctum/csrf-cookie').then( async () => {
-     await authStore.register({
+    const response =  await authStore.register({
       name: name.value,
       email: email.value,
       password: password.value,
       password_confirmation: password_confirmation.value
-    })
-   await router.push('/user')
+    });
+    staus.value = response.data.message;
+   //await router.push('/home')
   })
   } catch (error) {
     console.error('Registration failed:', error)
@@ -150,7 +154,7 @@ const isFormInvalid = computed(() => {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  width: 100vw;
+
   background-color: #f9f9f9;
   padding: 20px;
 

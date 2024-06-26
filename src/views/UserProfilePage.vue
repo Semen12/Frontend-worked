@@ -160,7 +160,9 @@
             status_name.value = '';
           }, 1000);
         } catch (err) {
-          status_name.value = err.response.data.error ||Object.values(err.response.data.errors).join(' ') || 'Ошибка при обновлении имени';
+          status_name.value = err.response.data.error ||
+          Object.values(err.response.data.errors).join(' ') ||
+           'Ошибка при обновлении имени';
         }
       };
 
@@ -174,7 +176,8 @@
             status_emailunverified.value = '';
           }, 1000);
         } catch (err) {
-          status_emailunverified.value = err.response.data.error ||Object.values(err.response.data.errors).join(' ') || 'Ошибка при обновлении email';
+          status_emailunverified.value = err.response.data.error ||
+          Object.values(err.response.data.errors).join(' ') || 'Ошибка при обновлении email';
         }
       };
 

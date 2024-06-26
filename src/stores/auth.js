@@ -61,7 +61,8 @@ export const useAuthStore = defineStore('auth', {
     },
     async verifyTwoFactorCode(credentials) {
       try {
-       const response =  await axios.post('/two-factor-challenge', credentials)       
+       const response =  await axios.post('/two-factor-challenge', 
+       credentials)       
         this.twoFactorRequired = false
         await this.fetchUser()
         

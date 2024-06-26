@@ -1,5 +1,5 @@
 <template>
-    <div class="view-accounts">
+    <div class="view-accounts" v-if="isEmailVerified && hasMasterPassword">
         <h2 class="view-accounts__title">Ваши учётные записи</h2>
         <input type="text" v-model="searchQuery" placeholder="Поиск по названию, логину или типу"
             class="view-accounts__search" />
@@ -11,7 +11,8 @@
                 <p class="view-accounts__url"><span>Тип: </span>{{ account.type }}</p>
             </div>
         </div>
-        <AccountModal v-if="selectedAccount" :account="selectedAccount" @close="selectedAccount = null" @accountDeleted="removeAccount"/>
+        <AccountModal v-if="selectedAccount" :account="selectedAccount" 
+        @close="selectedAccount = null" @accountDeleted="removeAccount"/>
         <MasterPasswordModal v-if="showMasterPasswordModal" @close="closeMasterPasswordModal"
             @master-password-set="fetchAccount" />
     </div>
@@ -19,13 +20,16 @@
 </template>
 
 <script setup>
-    import { ref, computed, onMounted } from 'vue';
+    import { ref, computed, onMounted, onBeforeMount } from 'vue';
     import axios from 'axios';
     import { useMasterPasswordStore } from '@/stores/masterpassword.js';
     import AccountModal from '@/components/Home/AccountModal.vue';
     import MasterPasswordModal from '@/components/Home/MasterPasswordModal.vue';
     import ScrollToTop from '@/components/ScrollToTop.vue';
-
+   
+    import { useAuthStore } from '@/stores/auth';
+    const authStore = useAuthStore();
+   
     const accounts = ref([]);
     const selectedAccount = ref(null);
     const searchQuery = ref('');
@@ -33,6 +37,8 @@
     const accountIdToFetch = ref(null);
     const masterPasswordStore = useMasterPasswordStore();
 
+    const isEmailVerified = computed(() => authStore.user?.email_verified ?? false);
+  const hasMasterPassword = computed(() => authStore.user?.master_password ?? false);
     const fetchAccounts = async () => {
         try {
             const response = await axios.get('/accounts');

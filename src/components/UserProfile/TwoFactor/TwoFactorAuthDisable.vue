@@ -71,8 +71,6 @@
                     confirmation_code: code.value
                 }
             });
-            
-            
             verifycodestatus.value = response.data.message;
             setTimeout(() => {
                 showVerification.value = false;
@@ -82,7 +80,8 @@
             code.value = '';
         } catch (error) {
             verifycodestatus.value = '';
-            errorMessage.value = error.response.data.error || Object.values(error.response.data.errors).join(' ') || 'Ошибка при подтверждении кода';
+            errorMessage.value = error.response.data.error || 
+            Object.values(error.response.data.errors).join(' ') || 'Ошибка при подтверждении кода';
         }
     };
 </script>

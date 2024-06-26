@@ -9,18 +9,11 @@
       <div class="login__form-group">
         <label for="password" class="login__label">Пароль</label>
         <div class="login__input-container">
-          <input
-            :type="showPassword ? 'text' : 'password'"
-            id="password"
-            v-model="password"
-            class="login__input"
-            required
-          />
+          <input :type="showPassword ? 'text' : 'password'" id="password"  v-model="password" class="login__input" required />
           <button type="button" @click="toggleShowPassword" class="login__toggle">
             {{ showPassword ? 'Скрыть' : 'Показать' }}
           </button>
         </div>
-
         <router-link :to="'/password-forgot'" class="login__forgot-password">
           Забыли пароль? Восстановить пароль
         </router-link>
@@ -31,8 +24,7 @@
       </div>
       <div v-if="loginError" class="login__error">{{ loginError }}</div>
       <button type="submit" class="login__button" :disabled="isFormInvalid">Войти</button>
-      <router-link :to="'/register'" class="login__register-link"
-        >Ещё нет аккаунта? Зарегистрироваться</router-link
+      <router-link :to="'/register'" class="login__register-link">Ещё нет аккаунта? Зарегистрироваться</router-link
       >
     </form>
   </div>
@@ -45,7 +37,7 @@ import { useAuthStore } from '@/stores/auth.js'
 import axios from 'axios'
 
 onMounted(() => {
- /* authStore.fetchCsrfToken()*/
+  /* authStore.fetchCsrfToken()*/
 })
 
 const email = ref('')
@@ -135,7 +127,7 @@ const isFormInvalid = computed(() => {
       align-items: center;
       justify-content: center;
       gap: 5px;
-       margin-bottom: 0px;
+      margin-bottom: 0px;
       /* .login__label {
         margin-bottom: 0;
       } */

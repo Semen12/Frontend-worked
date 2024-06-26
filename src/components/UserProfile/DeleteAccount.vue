@@ -113,9 +113,9 @@
 
             const response = await axios.delete('/user/destroy', { data: payload });
             alertMessage.value = response.data.message;
-            setTimeout(() => {
+            /* setTimeout(() => {
                 router.push({ name: 'Login' });
-            }, 1000)
+            }, 1000) */
         } catch (error) {
             console.error('Ошибка удаления аккаунта:', error);
             showAlert.value = true;

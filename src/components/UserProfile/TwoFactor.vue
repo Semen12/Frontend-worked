@@ -9,8 +9,8 @@
             </div>
         </div>
 
-        <div v-if="!isEmailVerified" class="two-factor__error">Пожалуйста, подтвердите свою почту, чтобы создать или
-            обновить мастер-пароль.</div>
+        <div v-if="!isEmailVerified" class="two-factor__error">
+          Пожалуйста, подтвердите свою почту, чтобы включить двухфакторную аутентификацию</div>
     </div>
 </template>
 <script setup>
@@ -20,18 +20,7 @@
     import { useAuthStore } from '@/stores/auth.js';
     import axios from 'axios';
 
-
     const authStore = useAuthStore();
-
-    /* const checkMasterPasswordStatus = async () => {
-      try {
-        const response = await axios.get('/user');
-        hasMasterPassword.value = response.data.user.master_password;
-        isEmailVerified.value = response.data.user.email_verified
-      } catch (error) {
-        console.error('Error checking master password status:', error);
-      }
-    }; */
 
     const isEmailVerified = computed(() => authStore.user?.email_verified ?? false);
     const hasTwoFactor = computed(() => authStore.user?.two_factor ?? false);

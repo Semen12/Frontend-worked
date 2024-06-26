@@ -57,10 +57,10 @@
       });
 
       status_password_create.value = response.data.message;
-      setTimeout(() => {
+     /*  setTimeout(() => {
         status_password_create.value = '';
         authStore.setMasterPassword(true);
-      }, 850)
+      }, 850) */
       master_password.value = '';
       master_password_confirmation.value = '';
 

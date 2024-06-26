@@ -104,8 +104,7 @@
     const verifyEnableCode = async () => {
             if(!password.value || !code.value){
                 return;
-            };
-       
+            };  
         errorMessage.value = '';
         verifycodestatus.value = 'Подтверждение кода...';
         try {
@@ -114,40 +113,37 @@
                 code: code.value
             });
             verifycodestatus.value = res.data.message;
-            if (res.status === 200) {
-                try {
-                    const respons = await axios.post('/user/confirm-password', { password: password.value });
-                    if (respons.status === 201) {
-                        try {
-                            verifycodestatus.value = 'Пароль подтверждён...';
-                            const response = await axios.get('/user/two-factor-qr-code');
-                            qrCodeSvg.value = response.data.svg;
-                            const urlres = response.data.url;
-                            const urlObject = new URL(urlres.replace("otpauth://totp/", "http://dummy/"));
-                            const searchParams = new URLSearchParams(urlObject.search);
-                            url.value = 'Или введите код в приложении в ручную: ' + searchParams.get('secret');
-                            showQRCode.value = true;
-                            showVerification.value = false;
-                            statusmessage.value = '';
-                            errorMessage.value = '';
-                        } catch (error) {
-                            errorMessage.value = error.response.data.error || Object.values(error.response.data.errors).join(' ');
-                        }
-
-                    }
-
-                } catch (error) {
-                    errorMessage.value = error.response.data.error || Object.values(error.response.data.errors).join(' ') || 'Ошибка подтверждения ...';
-                }
-
-
-
+        if (res.status === 200) {
+            try {
+        const respons = await axios.post('/user/confirm-password', { password: password.value });
+        if (respons.status === 201) {
+            try {
+                verifycodestatus.value = 'Пароль подтверждён...';
+                const response = await axios.get('/user/two-factor-qr-code');
+                qrCodeSvg.value = response.data.svg;
+                const urlres = response.data.url;
+                const urlObject = new URL(urlres.replace("otpauth://totp/", "http://dummy/"));
+                const searchParams = new URLSearchParams(urlObject.search);
+                url.value = 'Или введите код в приложении в ручную: ' + searchParams.get('secret');
+                showQRCode.value = true;
+                showVerification.value = false;
+                statusmessage.value = '';
+                errorMessage.value = '';
+            } catch (error) {
+                errorMessage.value = error.response.data.error || 
+                Object.values(error.response.data.errors).join(' ');
             }
-
+        }
+            } catch (error) {
+                errorMessage.value = error.response.data.error || 
+                Object.values(error.response.data.errors).join(' ') || 'Ошибка подтверждения ...';
+            }
+        }
         } catch (error) {
             console.log(error);
             verifycodestatus.value = '';
-            errorMessage.value = error.response.data.error || Object.values(error.response.data.errors).join(' ') || 'Ошибка подтверждения кода';
+            errorMessage.value = error.response.data.error || 
+            Object.values(error.response.data.errors).join(' ') || 'Ошибка подтверждения кода';
         }
     };
 

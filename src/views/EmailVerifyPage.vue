@@ -43,7 +43,7 @@
       if (response.status === 200) {
         // Подтверждение успешно
        // await authStore.fetchUser()
-        message.value = response.data.message + ' Перенаправляем на страницу профиля.'
+        message.value = response.data.message + ' Перенаправляем на страницу профиля...'
         setTimeout(() => {
           router.push({ name: 'UserProfile' })
         }, 1500)
@@ -52,7 +52,7 @@
         console.error(err)
      
         if ( err.response.status === 403 || err.response.status === 500) {
-            error.value = 'Попробуйте отправить ссылку еще раз. Перенаправляем на страницу профиля.'
+            error.value = 'Попробуйте отправить ссылку еще раз. Перенаправляем на страницу профиля...'
             setTimeout(() => {
             router.push({ name: 'UserProfile' })
             }, 1500)

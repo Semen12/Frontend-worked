@@ -71,7 +71,7 @@
 
 
 <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, onBeforeMount } from 'vue';
   import axios from 'axios';
   import 'vs-vue3-select/dist/vs-vue3-select.css'
   import { computed } from 'vue';
@@ -95,7 +95,7 @@
   const status = ref('');
 
 
-  onMounted(() => {
+  onBeforeMount(() => {
     if (!sessionStorage.getItem('accountTypes')) {
       fetchAccountTypes();
     } else {
@@ -153,17 +153,17 @@
         description: description.value,
       });
       status.value = response.data.message;
-      setTimeout(() => {
+      /* setTimeout(() => {
         type.value = '';
         url.value = '';
         name.value = '';
         login.value = '';
         password.value = '';
         description.value = '';
-      }, 1000);
-      setTimeout(() => {
+      }, 1000); */
+      /* setTimeout(() => {
         status.value = '';
-      }, 1400)
+      }, 1400) */
     } catch (error) {
       status.value = error.response.data.error;
       const errors = error.response.data.errors;
@@ -237,7 +237,7 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    width: 100vw;
+   // width: 100vw;
     background-color: #f9f9f9;
     padding: 20px;
 

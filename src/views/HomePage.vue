@@ -11,7 +11,7 @@
         Добавить запись об акаунте
       </button>
     </div>
-    <div class="home__content">
+    <div class="home__content" v-if="isEmailVerified && hasMasterPassword">
       <Accounts v-if="activeTab === 'accounts'" />
       <AddAccount v-if="activeTab === 'add'" />
     </div>
@@ -32,10 +32,10 @@
   };
 
   const isEmailVerified = computed(() => authStore.user?.email_verified ?? false);
-  const hasMasterPassword = computed(() => authStore.user?.master_password ?? false)
+  const hasMasterPassword = computed(() => authStore.user?.master_password ?? false);
 
-  const verificationStatus = 'Подтвердите свою почту, чтобы создать или обновить мастер пароль.';
-  const statusMasterPassword = 'Пожалуйста, создайте мастер-пароль в профиле пользователя, чтобы начать создавать записи об учетных записях.';
+  const verificationStatus = 'Подтвердите свою почту, чтобы создать мастер-пароль в профиле пользователя.';
+  const statusMasterPassword = 'Пожалуйста, создайте мастер-пароль в профиле пользователя, чтобы начать создавать записи о своих аккаунтах.';
 
 </script>
 
@@ -44,7 +44,7 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    width: 100%;
+   // width: 100%;
     background-color: #f9f9f9;
     padding: 20px;
     align-items: center;

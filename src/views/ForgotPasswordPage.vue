@@ -4,7 +4,7 @@
     <form class="password-forgot__form" @submit.prevent="sendResetLink">
       <div class="password-forgot__form-group">
         <label for="email" class="password-forgot__label">Введите email</label>
-        <input type="email" id="email" v-model="email" class="password-forgot__input" placeholder="mail@example.ru" required />
+        <input type="email" id="email" v-model="email" class="password-forgot__input" required />
         <div v-if="emailError" class="password-forgot__error">{{ emailError }}</div>
       </div>
       <button class="password-forgot__button" :disabled="isFormInvalid">Отправить ссылку для восстановления</button>
@@ -23,12 +23,12 @@ const status = ref('')
 const emailError = ref('')
 
 const sendResetLink = async () => {
-  status.value = ''
-  emailError.value = ''
-  if (!email.value) {
+  if (isFormInvalid.value) {
     event.preventDefault()
     return
   }
+  status.value = ''
+  emailError.value = ''
   try {
 
     await axios.get('/sanctum/csrf-cookie').then(async () => {

@@ -17,11 +17,11 @@ const router = createRouter({
   routes: [
     {
         path: '/',
-     /*  redirect: () => {
+      redirect: () => {
         const authStore = useAuthStore();
         authStore.fetchUser();
         return authStore.isAuthenticated ? { name: 'Guest' }:{ name: 'Home' }  ;
-      }, */
+      },
     },
     {
       path: '/guest',
@@ -84,31 +84,43 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
 
-    /* {
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/',
-    },*/
+    },
   ]
 })
+/* 
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore();
+  try {
+    // Проверяем, если мы не получили пользователя, то пытаемся его получить
+    if (!authStore.user) {
+      await authStore.fetchUser();
+    }
+  } catch (error) {
+    console.error('Failed to fetch user:', error);
 
-/*router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore()
-  const isAuthenticated = authStore.isAuthenticated
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
-  const requiresGuest = to.matched.some((record) => record.meta.requiresGuest)
-  const requiresTwoFactor = to.matched.some((record) => record.meta.requiresTwoFactor)
-
-  /!*if (requiresAuth && !isAuthenticated) {
-    next({ name: 'Login' });
-  } else if (requiresGuest && isAuthenticated) {
-    next({ name: 'Home' });
-  } else if (requiresTwoFactor && !authStore.twoFactorRequired) {
-    next({ name: 'Home' });
-  } else if (isAuthenticated && authStore.twoFactorRequired && to.path == '/two-factor') {
-    next({ name: 'TwoFactor' });
-  } else {
-    next();
-  }*!/
-})*/
-
+    // Перенаправляем пользователя на страницу входа, если не удалось получить данные пользователя
+    return next({ name: 'Login' });
+  }
+  // Если маршрут требует аутентификацию и пользователь не аутентифицирован
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    return next({ name: 'Login' });
+  }
+  // Если маршрут требует гостя, а пользователь аутентифицирован
+  if (to.meta.requiresGuest && authStore.isAuthenticated) {
+    return next({ name: 'Home' });
+  }
+   // Добавляем проверку для маршрута '/two-factor'
+   if (to.path === '/two-factor' && !authStore.isAuthenticated && authStore.twoFactorRequired) {
+    return next();
+  }
+   // Если маршрут требует двухфакторную аутентификацию
+  if (to.meta.requiresTwoFactor && !authStore.twoFactorRequired) {
+    return next({ name: 'Login' });
+  }
+ 
+  next();
+});  */
 export default router

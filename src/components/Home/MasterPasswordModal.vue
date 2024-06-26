@@ -14,25 +14,30 @@
                         </button>
                     </div>
                 </label>
-                <p class="master-password-modal__status-message" v-if="masterPasswordStatus">{{ masterPasswordStatus }}</p>
+                <p class="master-password-modal__status-message" v-if="masterPasswordStatus">{{ masterPasswordStatus }}
+                </p>
                 <div class="master-password-modal__actions">
-                    
-                    <button type="button" @click="$emit('close')" class="master-password-modal__button master-password-modal__button-cancel">Закрыть</button><button type="submit" class="master-password-modal__button">Подтвердить</button>
+
+                    <button type="button" @click="$emit('close')"
+                        class="master-password-modal__button master-password-modal__button-cancel">Закрыть</button><button
+                        type="submit" class="master-password-modal__button">Подтвердить</button>
                 </div>
             </form>
-            <a class="master-password-modal__reset-link" @click.prevent="openReset" v-if="ResetLink" >Отправить ссылку для сброса мастер-пароля?</a>
-           <h3 class=master-password-modal__title v-if="!ResetLink">Отправить ссылку для сброса мастер-пароля</h3>
+            <a class="master-password-modal__reset-link" @click.prevent="openReset" v-if="ResetLink">Отправить ссылку
+                для сброса мастер-пароля?</a>
+            <h3 class=master-password-modal__title v-if="!ResetLink">Отправить ссылку для сброса мастер-пароля</h3>
             <form @submit.prevent="sendResetLink" v-if="!ResetLink">
                 <label class="master-password-modal__label">
                     Пароль от аккаунта
                     <input type="password" v-model="password" class="master-password-modal__input" required />
                 </label>
                 <p class="master-password-modal__status-message" v-if="sendLink">{{ sendLink }}</p>
-                <div class="master-password-modal__actions"> 
-                    <button type="button" @click="openReset" class="master-password-modal__button master-password-modal__button-cancel">Отмена</button>
+                <div class="master-password-modal__actions">
+                    <button type="button" @click="openReset"
+                        class="master-password-modal__button master-password-modal__button-cancel">Отмена</button>
                     <button type="submit" class="master-password-modal__button">Отправить</button>
                 </div>
-                
+
             </form>
         </div>
     </div>
@@ -45,7 +50,7 @@
 
     const emit = defineEmits(['close', 'master-password-set']);
     const masterPasswordStore = useMasterPasswordStore();
-    
+
     const masterPassword = ref('');
     const password = ref('');
     const showPassword = ref(false);
@@ -67,12 +72,13 @@
                 masterPasswordStatus.value = 'Мастер-пароль проверен, открываем учётную запись...';
                 setTimeout(() => {
                     emit('master-password-set');
-                },300)
-                
-            } 
+                }, 300)
+
+            }
         } catch (error) {
             console.error('Error setting master password:', error);
-            masterPasswordStatus.value = error.response.data.error ||Object.values(error.response.data.errors).join(' ')|| 'Ошибка при установке мастер-пароля';
+            masterPasswordStatus.value = error.response.data.error || 
+            Object.values(error.response.data.errors).join(' ') || 'Ошибка при установке мастер-пароля';
         }
     };
 
@@ -80,12 +86,12 @@
         sendLink.value = 'Отправляем ссылку для сброса мастер-пароля...';
         try {
             const response = await axios.post('/user/link-master-password', { password: password.value });
-            if (response.status === 200) {              
+            if (response.status === 200) {
                 sendLink.value = response.data.message;
             }
         } catch (error) {
             console.error('Error sending reset link:', error);
-            sendLink.value = error.response.data.error ||Object.values(error.response.data.errors).join(' ')|| 'Ошибка при отправке ссылки';
+            sendLink.value = error.response.data.error || Object.values(error.response.data.errors).join(' ') || 'Ошибка при отправке ссылки';
         }
     };
 </script>
@@ -119,7 +125,7 @@
             z-index: 1001;
             width: 90%;
             max-width: 400px;
-           
+
         }
 
         &__title {
@@ -134,6 +140,7 @@
             margin-top: 20px;
             margin-bottom: 10px;
         }
+
         &__reset-link {
             display: flex;
             align-items: center;
@@ -142,14 +149,16 @@
             color: #42b983;
             cursor: pointer;
             font: 1em sans-serif;
-           // white-space: nowrap;
-  //word-break: keep-all;
-  margin-top: 7px;
+            // white-space: nowrap;
+            //word-break: keep-all;
+            margin-top: 7px;
 
         }
-        &__status-message{
-             color: #2c3e50;
+
+        &__status-message {
+            color: #2c3e50;
         }
+
         &__label {
             display: block;
             margin-bottom: 10px;
@@ -206,10 +215,11 @@
             &:hover {
                 background-color: #2980b9;
             }
+
             &-cancel {
                 background-color: #42426e;
             }
         }
-       
+
     }
 </style>
